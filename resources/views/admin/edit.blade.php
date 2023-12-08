@@ -118,6 +118,11 @@
                             <input required type="file" {{$pendaftar->status_pendaftar == 'di terima' ||
                             $pendaftar->status_pendaftar == 'di tolak'? 'disabled' : ''}} accept=".pdf"
                             class="form-control" name="berkas">
+                            @error('berkas')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                     </div>
 
@@ -164,6 +169,24 @@
             $('#statuspendaftar').on('change', toggleFileInputRequired);
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            function toggleFileInputRequired() {
+                var statusPendaftar = $('#statuspendaftar').val();
+                if (statusPendaftar === 'draft') {
+                    $('#berkas-group').hide();
+                    $('input[name="berkas"]').removeAttr('required');
+                } else {
+                    $('#berkas-group').show();
+                    $('input[name="berkas"]').attr('required', 'required');
+                }
+            }
+    
+            toggleFileInputRequired();
+            $('#statuspendaftar').on('change', toggleFileInputRequired);
+        });
+    </script>
+    
     <script>
         function refreshAfterDownload(event) {
             event.preventDefault();

@@ -97,12 +97,17 @@ class AdminController extends Controller
 
     public function unduhProposal($id)
     {
-        DB::table('pendaftar')->where('id_daftar', $id)->update(['status_pendaftar' => 'sedang di tinjau']);
+        //DB::table('pendaftar')->where('id_daftar', $id)->update(['status_pendaftar' => 'sedang di tinjau']);
 
         $ambil = DB::table('pendaftar')->where('id_daftar', $id)->first();
+        $pendaftar = DB::table('pendaftar')->where('id_daftar', $id)->first();
 
         if (!$ambil) {
             return abort(404);
+        }
+
+        if ($pendaftar->status_pendaftar !== 'di tolak' && $pendaftar->status_pendaftar !== 'di terima') {
+            DB::table('pendaftar')->where('id_daftar', $id)->update(['status_pendaftar' => 'sedang di tinjau']);
         }
 
         $filePath = public_path('berkas/proposal/' . $ambil->proposal);
@@ -146,6 +151,11 @@ class AdminController extends Controller
         $request->validate([
             'status_pendaftar' => ['required', Rule::in(['di tolak', 'di terima', 'draft'])],
             'berkas' => $request->input('status_pendaftar') !== 'draft' ? 'required|mimes:pdf|max:2048' : '',
+        ], [
+            'berkas.*' => 'Tidak boleh kosong',
+            'berkas.required' => 'Tidak boleh kosong',
+            'berkas.mimes' => 'Harus File PDF',
+            'berkas.max' => 'Max file 2mb',
         ]);
 
         $pendaftar = DB::table('pendaftar')->where('id_daftar', $id)->first();
