@@ -18,23 +18,43 @@ class AdminController extends Controller
         $this->mail = $mail;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::check()) {
             return redirect('/log');
         }
 
         $userRole = Auth::user()->role;
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $show_all = $request->input('show_all');
 
         if ($userRole == 'operator') {
-            return view('admin.operator.admin', ['pendaftar' => DB::table('pendaftar')->get()]);
+            $pendaftar = DB::table('pendaftar')
+            ->when($start_date, function ($query) use ($start_date) {
+                return $query->where('start_date', '>=', $start_date);
+            })
+            ->when($end_date, function ($query) use ($end_date) {
+                return $query->where('end_date', '<=', $end_date);
+            })
+            ->get();
+            return view('admin.operator.admin', compact('pendaftar'));
+
         } elseif ($userRole == 'panitia') {
-            return view('admin.panitia.admin', ['pendaftar' => DB::table('pendaftar')->get()]);
+            $pendaftar = DB::table('pendaftar')
+            ->when($start_date, function ($query) use ($start_date) {
+                return $query->where('start_date', '>=', $start_date);
+            })
+            ->when($end_date, function ($query) use ($end_date) {
+                return $query->where('end_date', '<=', $end_date);
+            })
+            ->get();
+            return view('admin.panitia.admin', compact('pendaftar'));
+            
         } else {
             return view('errors.403');
         }
     }
-
 
     function operator()
     {

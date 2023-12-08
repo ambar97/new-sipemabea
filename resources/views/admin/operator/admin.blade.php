@@ -8,9 +8,42 @@
             max-height: 800px;
             overflow-y: auto;
         }
+        .fixed-header {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #d9edf7; /* Background color for the fixed header */
+            color: black;
+        }
+
+        .fixed-header th {
+            text-align: center;
+            white-space: nowrap; /* Prevent text from wrapping to the next line */
+        }
+
+        .fixed-header td {
+            white-space: nowrap; /* Prevent text from wrapping to the next line */
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #d9edf7; /* Use a light blue color for even rows */
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: white; /* Use white color for odd rows */
+        }
+
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .centered-table td {
+            text-align: center;
+            vertical-align: middle;
+        }
     </style>
 </head>
-
 <body>
     <br><br><br><br>
     <div class="container">
@@ -19,13 +52,23 @@
                 <h3 class="text-center" style="color: #5777ba;">Selamat datang di halaman Operator</h3>
             </div><br>
         </div><br>
+
+        <form action="{{ route('admin.search') }}" method="GET">
+            @csrf
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date" id="start_date" required>
+            <label for="end_date">End Date:</label>
+            <input type="date" name="end_date" id="end_date" required>
+            <button type="submit" class="btn btn-outline-primary btn-sm tambahin">Search Date</button>
+            <a href=/admin class="btn btn-outline-primary btn-sm tambahin">Show All</a>
+        </form>
         <div class="row">
             <div class="col-md-12">
                 <div class="scrollable-table">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No</th>
+                    <table class="table table-bordered centered-table">
+                        <thead class="fixed-header">
+                            <tr style="text-align: center;">
+                                <th >No</th>
                                 <th>Kode Daftar</th>
                                 <th>Tipe</th>
                                 <th>Nama Instansi</th>
@@ -74,13 +117,20 @@
                                     Tidak ada berkas
                                     @endif
                                 </td>
-                                <td>{{ $data->status_pendaftar }}</td>
+                                <td><h5>
+                                    <span class="
+                                        @if ($data->status_pendaftar === 'sedang di tinjau') badge badge-warning
+                                        @elseif ($data->status_pendaftar === 'di terima') badge badge-success
+                                        @elseif ($data->status_pendaftar === 'di tolak') badge badge-danger
+                                        @elseif ($data->status_pendaftar === 'draft') badge badge-info
+                                        @elseif ($data->status_pendaftar === 'pengajuan') badge badge-primary
+                                        @endif">
+                                        {{ $data->status_pendaftar }}
+                                    </span></h5>
+                                </td>
                                 <td>
-                                    {{-- @if (in_array($data->status_pendaftar, ['draft', 'sedang di tinjau',
-                                    'pengajuan'])) --}}
                                     <a href="{{ route('edit', ['id' => $data->id_daftar]) }}"
                                         class="btn btn-primary">Edit</a>
-                                    {{-- @endif --}}
                                 </td>
                                 <?php
                                 $statusPeserta = DB::table('peserta')->where('id_daftar', $data->id_daftar)->value('status');

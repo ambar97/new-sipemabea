@@ -8,6 +8,40 @@
             max-height: 800px;
             overflow-y: auto;
         }
+        .fixed-header {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #d9edf7; /* Background color for the fixed header */
+            color: black;
+        }
+
+        .fixed-header th {
+            text-align: center;
+            white-space: nowrap; /* Prevent text from wrapping to the next line */
+        }
+
+        .fixed-header td {
+            white-space: nowrap; /* Prevent text from wrapping to the next line */
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #d9edf7; /* Use a light blue color for even rows */
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: white; /* Use white color for odd rows */
+        }
+
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .centered-table td {
+            text-align: center;
+            vertical-align: middle;
+        }
     </style>
 </head>
 
@@ -19,12 +53,21 @@
                 <h3 class="text-center" style="color: #5777ba;">Selamat datang di halaman Panitia</h3>
             </div><br>
         </div><br>
+        <form action="{{ route('admin.search') }}" method="GET">
+            @csrf
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date" id="start_date" required>
+            <label for="end_date">End Date:</label>
+            <input type="date" name="end_date" id="end_date" required>
+            <button type="submit" class="btn btn-outline-primary btn-sm tambahin">Search Date</button>
+            <a href=/admin class="btn btn-outline-primary btn-sm tambahin">Show All</a>
+        </form>
         <div class="row">
             <div class="col-md-12">
                 <div class="scrollable-table">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
+                    <table class="table table-bordered centered-table">
+                        <thead class="fixed-header">
+                            <tr style="text-align: center;">
                                 <th>No</th>
                                 <th>Kode Daftar</th>
                                 <th>Tipe</th>
@@ -75,12 +118,13 @@
                                 <?php
                                 $statusPeserta = DB::table('peserta')->where('id_daftar', $data->id_daftar)->value('status');
                                 ?>
-                                <td>
-                                    @if ($statusPeserta === 'magang')
-                                    Magang
-                                    @else
-                                    Tidak Magang
-                                    @endif
+                                <td><h5>
+                                    <span class="badge
+                                        @if ($statusPeserta === 'magang') badge badge-success /* Green color for 'Magang' */
+                                        @else badge badge-danger 'Tidak Magang' /* Red color for 'Tidak Magang' */
+                                        @endif">
+                                        {{ $statusPeserta }}
+                                    </span></h5>
                                 </td>
                             </tr>
                             @endforeach

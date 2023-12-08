@@ -112,42 +112,6 @@
             }
         });
     });
-
-    $(document).on("submit", "#cario-form", function (e) {
-    e.preventDefault();
-    var mailer = $('#emailer').val();
-    $.ajax({
-        type: "POST",
-        url: '{{ route("cariData") }}',
-        dataType: 'json',
-        data: {
-            _token: '{{ csrf_token() }}',
-            kode: mailer
-        },
-        success: function (data) {
-                $('.clases').append(
-                    '<br>' +
-                    '<span>Nomor Pendaftaran : ' + mailer + ' </span> <br>' +
-                    '<span>Status : <small style="font-size:16px" class="' + data.warn + '">' + data.status +
-                    '</small></span><br>' +
-                    '<span>Tanggal magang : ' + data.tanggal + '</span>' +
-                    '<br>' +
-                    '<span>Jenis Magang : ' + data.jenis + '</span>' +
-                    '<br>' + '<span>Tujuan Magang : ' + data.tujuan + '</span>' +
-                    '<br>' +
-                    '<span>Instansi : ' + data.instansi + '</span><br>' +
-                    '<span>Proposal : <a href="/download/' + data.idnn + '/proposal" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> Unduh Proposal</a></span>' +
-                    '<br>' +
-                    '<span>CV : <a href="/download/' + data.idnn + '/cv" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> Unduh CV</a></span>'
-                );
-            $('#emailer').val('');
-        },
-        error: function () {
-            $('.clases').empty();
-            $('.clases').append('<span>Error: Data tidak ditemukan.</span>');
-        }
-    });
-});
 </script>
 </body>
 

@@ -122,6 +122,13 @@
     $(document).on("submit", "#cario-form", function (e) {
         e.preventDefault();
         var mailer = $('#emailer').val();
+        // Check if the input text is empty
+        if (!mailer.trim()) {
+            $('.clases').empty();
+            $('.clases').append('<span style="color: red;">Harap isi Kode Magang</span>');
+            return;
+        }
+
         $.ajax({
             type: "POST",
             url: '{{ route("cariData") }}',
@@ -142,7 +149,7 @@
                     '<span>Jenis Magang : ' + data.jenis + '</span>' +
                     '<br>' + '<span>Tujuan Magang : ' + data.tujuan + '</span>' +
                     '<br>' +
-                    '<span>Instansi : ' + data.instansi + '</span><br>'
+                    '<span>Asal Kampus / Sekolah : ' + data.instansi + '</span><br>'
                 );
 
                 // Cek jika status di terima atau di tolak dan ada berkas_toter
@@ -157,7 +164,7 @@
             },
             error: function () {
                 $('.clases').empty();
-                $('.clases').append('<span>Error: Data tidak ditemukan.</span>');
+                $('.clases').append('<span style="color: red;">Kode Magang Tidak Terdaftar</span>');
             }
         });
     });

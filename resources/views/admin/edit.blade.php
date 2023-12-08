@@ -115,7 +115,7 @@
                         <div class="col-md-6">
                             <label for="berkas">Berkas Informasi <small style="font-size:10px">Max: 2MB |
                                     PDF</small></label>
-                            <input type="file" {{$pendaftar->status_pendaftar == 'di terima' ||
+                            <input required type="file" {{$pendaftar->status_pendaftar == 'di terima' ||
                             $pendaftar->status_pendaftar == 'di tolak'? 'disabled' : ''}} accept=".pdf"
                             class="form-control" name="berkas">
                         </div>
@@ -128,10 +128,13 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <button type="submit" class="btn btn-primary" id="submit-button" {{$pendaftar->status_pendaftar ==
+                    <button type="submit" class="btn btn-primary" onclick="submitForm()" id="ajukanBtn" {{$pendaftar->status_pendaftar ==
                         'di terima' || $pendaftar->status_pendaftar == 'di tolak'
-                        ? 'disabled':''}}>Simpan Perubahan</button>
+                        ? 'disabled':''}} >Simpan Perubahan</button>
                     <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
+                    <div id="loadingIndicator" style="display: none;">
+                        Loading...
+                    </div>
                 </div>
             </form>
             <br>
@@ -179,6 +182,18 @@
             setTimeout(function () {
                 location.reload();
             }, 1000); // Ganti dengan penundaan yang sesuai (dalam milidetik)
+        }
+    </script>
+    <script>
+        function submitForm() {
+            // Show loading indicator
+            $('#loadingIndicator').show();
+    
+            // Disable the button to prevent multiple submissions
+            $('#ajukanBtn').attr('disabled', true);
+    
+            // Submit the form
+            $('#ajukanBtn').closest('form').submit();
         }
     </script>
 </body>

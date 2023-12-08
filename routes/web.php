@@ -41,4 +41,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/unduh-proposal/{id}', [AdminController::class, 'unduhProposal'])->name('unduh.proposal');
     Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('edit');
     Route::put('/admin/update/{id}', [AdminController::class, 'update'])->name('update');
+    Route::get('/admin/search', [AdminController::class, 'index'])->name('admin.search');
+    
 });
